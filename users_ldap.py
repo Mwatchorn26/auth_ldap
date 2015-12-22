@@ -52,7 +52,7 @@ class CompanyLDAP(osv.osv):
             id_clause = ''
             args = []
         cr.execute("""
-            SELECT id, company, ldap_server, ldap_server_port, ldap_binddn,
+            SELECT id, company,ldap_protocol, ldap_server, ldap_server_port, ldap_binddn,
                    ldap_password, ldap_filter, ldap_base, "user", create_user,
                    ldap_tls
             FROM res_company_ldap
@@ -69,7 +69,7 @@ class CompanyLDAP(osv.osv):
         :return: an LDAP object
         """
 
-        uri = 'ldaps://%s:%d' % (conf['ldap_server'],
+        uri = '%s://%s:%d' % (conf['ldap_protocol'],conf['ldap_server'],
                                 conf['ldap_server_port'])
 
         connection = ldap.initialize(uri)
@@ -205,6 +205,7 @@ class CompanyLDAP(osv.osv):
         'sequence': fields.integer('Sequence'),
         'company': fields.many2one('res.company', 'Company', required=True,
             ondelete='cascade'),
+        'ldap_protocol':fields.selection([('ldap','ldap'),('ldaps','ldaps')], help=("Select regular or secure ldap (ldaps)")),
         'ldap_server': fields.char('LDAP Server address', required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
         'ldap_binddn': fields.char('LDAP binddn', 
@@ -225,6 +226,7 @@ class CompanyLDAP(osv.osv):
                  "otherwise all authentication attempts will fail."),
     }
     _defaults = {
+        'ldap_protocol': 'ldap', 
         'ldap_server': '127.0.0.1',
         'ldap_server_port': 389,
         'sequence': 10,
