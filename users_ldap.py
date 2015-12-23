@@ -205,7 +205,7 @@ class CompanyLDAP(osv.osv):
         'sequence': fields.integer('Sequence'),
         'company': fields.many2one('res.company', 'Company', required=True,
             ondelete='cascade'),
-        'ldap_protocol':fields.selection([('ldap','ldap'),('ldaps','ldaps')], help=("Select regular or secure ldap (ldaps)")),
+        'ldap_protocol':fields.selection([('ldap','ldap'),('ldaps','ldaps')], string='Protocol', help=("Select regular or secure ldap (ldaps)")),
         'ldap_server': fields.char('LDAP Server address', required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
         'ldap_binddn': fields.char('LDAP binddn', 
